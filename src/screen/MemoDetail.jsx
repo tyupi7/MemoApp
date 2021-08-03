@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Text, StyleSheet} from 'react-native';
-import { BorderlessButton } from 'react-native-gesture-handler';
+import {
+  View, ScrollView, Text, StyleSheet,
+} from 'react-native';
 
 import AppBar from '../components/AppBar';
 import CircleBottun from '../components/CircleBottun';
@@ -20,7 +21,7 @@ export default function MemoDetailScreen() {
           本文用なので使い方を間違えると不自然に見えることがあります。
         </Text>
       </ScrollView>
-      <CircleBottun style={{ top: 160, bottom: 'auto' }}>+</CircleBottun>
+      <CircleBottun style={{ top: 160, bottom: 'auto' }} name="edit-2" />
     </View>
   );
 }
