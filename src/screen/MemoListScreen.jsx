@@ -8,14 +8,14 @@ import LogOutButton from '../components/LogOutButton';
 
 export default function MemoListScreen(prop) {
   const { navigation } = prop;
-  const [memos, setMemos] = useState([]); // 空の箱を定義して後で入れる,useStateで監視しているためメモを新規追加すると即座に反映される
+  const [memos, setMemos] = useState([]); // 空の箱を定義して後で入れる,useStateで一時的にデータを管理する
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <LogOutButton />,
     });
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // useEffceでログインの状態を監視する
     const db = firebase.firestore();
     const { currentUser } = firebase.auth();
     let unsubscribe = () => {};

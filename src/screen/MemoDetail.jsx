@@ -1,23 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { shape, string } from 'prop-types';
 import {
   View, ScrollView, Text, StyleSheet,
 } from 'react-native';
+import firebase from 'firebase';
 
 import CircleBottun from '../components/CircleBottun';
+import { dateToString } from '../utils'; // index.jsは特別なため書かなくても読み込んでくれる
 
 export default function MemoDetailScreen(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const { id } = route.params;
+  console.log(id);
+  const [memo, setMemo] = useState(null);
+
+  useEffect(() => {
+    const { currentUser } = firebase.auth();
+    let unsubscribe = () => {};
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      unsubscribe = ref.onSnapshot((doc) => {
+        console.log(doc.id, doc.data());
+        const data = doc.data();
+        setMemo({
+          id: doc.id,
+          bodyText: data.bodyText,
+          updatedAt: data.updatedAt.toDate(),
+        });
+      });
+    }
+    return unsubscribe;
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.MemoHeader}>
-        <Text style={styles.MemoTitle}>買い物リスト</Text>
-        <Text style={styles.MemoDate}>2020/7/24 18:00</Text>
+        <Text style={styles.MemoTitle} numberOfLines={1}>{memo && memo.bodyText}</Text>
+        <Text style={styles.MemoDate}>{memo && dateToString(memo.updatedAt)}</Text>
       </View>
       <ScrollView style={styles.MemoBody}>
         <Text style={styles.MemoText}>
-          買い物リスト
-          書体やレイアウトを確認するために使います。
-          本文用なので使い方を間違えると不自然に見えることがあります。
+          {memo && memo.bodyText}
         </Text>
       </ScrollView>
       <CircleBottun
@@ -28,6 +52,12 @@ export default function MemoDetailScreen(props) {
     </View>
   );
 }
+
+MemoDetailScreen.propTypes = {
+  route: shape({
+    params: shape({ id: string }),
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
