@@ -31,7 +31,7 @@ export default function MemoListScreen(prop) {
       unsubscribe = ref.onSnapshot((snapshot) => {
         const userMemos = [];
         snapshot.forEach((doc) => {
-          console.log(doc.id, doc.data());
+          // console.log(doc.id, doc.data());
           const data = doc.data();
           userMemos.push({
             id: doc.id,
@@ -41,10 +41,10 @@ export default function MemoListScreen(prop) {
         });
         setMemos(userMemos);
         setLoading(false);
-      }, (error) => {
-        console.log(error);
+      }, () => { // error
+        // console.log(error);
         setLoading(false);
-        Alert.Alert('データの読み込みに失敗しました');
+        Alert.alert('データの読み込みに失敗しました');
       });
     }
     return unsubscribe; // 画面を移動するときにリフレッシュを行うらしい

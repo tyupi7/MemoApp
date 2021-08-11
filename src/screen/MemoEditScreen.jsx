@@ -26,7 +26,7 @@ export default function MemoEditScreen(props) {
           navigation.goBack();
         })
         .catch((error) => {
-          Alert.Alert(error.code);
+          Alert.alert(error.code);
         });
     }
   }
